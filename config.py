@@ -1,0 +1,3 @@
+
+MUTATION_RATE = 5
+DEBUG_ENABLED = False

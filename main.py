@@ -7,7 +7,6 @@ from world_setup import world
 
 
 
-# fullscreen the canvas
 screen = Screen()
 screen.setup(world.width, world.height)
 screen.tracer(0)
@@ -16,14 +15,14 @@ hideturtle()
 
 
 #spawn 1 cell object.
-cell1 = Cell( parentpos=(0,0), attributes=[
-	1,  # speed
+world.cells.append(Cell( parentpos=(0,0), attributes=[
+	1,  # speed		
 	1,  # efficiency
 	200, # health measured 200 (0.1 seconds) 
-	85, # range,
+	100, # range,
 	0, # movement intelligence ( direction measured in angle),
 	0 # carlson
-	] )
+	] ))
 
 
 #store food objects
@@ -41,16 +40,14 @@ while True:
 	for obj in world.food:
 		obj.render()
 
-	cell1.render(debug = True)
-	
-	#find food 
-	v = cell1.search(world.food)
+	for cell in world.cells:
+		cell.render(debug = True)
 
-	for item in v:
-		item[0].render(debug = True)
+
 
 	#move cell
-	cell1.move()
+	for cell in world.cells:
+		cell.action()
 
 	
 
@@ -60,4 +57,3 @@ while True:
 
 
 
-screen.mainloop()
