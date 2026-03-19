@@ -28,7 +28,7 @@ class Cell():
 			self.fat_enough = self.health/self.efficiency
 			self.current_fat = 100
 			self.startingticks = 600
-			self.goal = None
+			self.goal = 0,0
 			self.state = "wander"
 
 	def render(self, debug=False):
@@ -161,7 +161,7 @@ class Cell():
 
 	def mitosis(self):
 		if random.randint(1, config.MUTATION_RATE) == 1:
-			print("yay")
+			print("Code 0: Mutation successful.")
 
 		
 		for i in range(random.randint(1,5)):
