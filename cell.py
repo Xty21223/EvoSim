@@ -29,6 +29,7 @@ class Cell():
 			self.current_fat = 100
 			self.startingticks = 600
 			self.goal = None
+			self.state = "wander"
 
 	def render(self, debug=False):
 		pencolor("black")
@@ -49,6 +50,14 @@ class Cell():
 			goto(self.x, self.y + 5)
 			pendown()
 			write(f"fat: {self.current_fat} / {self.fat_enough} ")
+
+			if self.goal != None:
+				pencolor("red")
+				penup()
+				goto(self.goal[0], self.goal[1])
+				pendown()
+				dot(5)
+	
 			
 
 	def action(self):
@@ -69,15 +78,22 @@ class Cell():
 			# when the cell.current_fat reaches cell.fat_enough then 
 			# the cell will reproduce
 			
-			if self.current_fat < self.fat_enough and self.goal != None:
+			if self.current_fat < self.fat_enough and self.state == "wander" or self.state == "hunting":
+				#print("seeking food")
 				self.seekFood(world.food)
 				#print("finding food")
 			elif self.current_fat >= self.fat_enough:
 				self.mitosis()
 				print("cloning")
-			else:
+				self.state = "cloning"
+			elif self.state == "wander":
+
+				#if we have goal and reached the goal
 				if self.goal != None and getDistance((self.x,self.y), self.goal) <= 1:
 					self.goal = (random.randint(-200,200), random.randint(-200,200))
+				elif self.goal == None:
+					self.goal = (random.randint(-200,200), random.randint(-200,200))
+				
 				self.move()
 			#how will the cell decide what t
 		else:
@@ -102,7 +118,8 @@ class Cell():
 				closest = food[0]
 				close_dst = food[1]
 				self.goal = (closest.x, closest.y)
-
+				
+		self.state = "hunting"
 		self.move()
 		
 		if close_dst <= 1:
@@ -139,7 +156,7 @@ class Cell():
 
 			self.x += stepx
 			self.y += stepy
-			print("moving!")
+			#print("moving!")
 
 
 	def mitosis(self):
