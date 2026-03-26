@@ -14,6 +14,7 @@ colormode(255)
 hideturtle()
 
 
+
 #spawn 1 cell object.
 world.cells.append(Cell( parentpos=(0,0), attributes=[
 	1,  # speed		
@@ -29,6 +30,7 @@ world.cells.append(Cell( parentpos=(0,0), attributes=[
 for i in range(10):
 	world.food.append( Food( ( randint(-200,200), randint(-200,200) ) )  )
 
+input()
 
 while True:
 
