@@ -28,7 +28,7 @@ class Cell():
 			self.fat_enough = self.health/self.efficiency
 			self.current_fat = 100
 			self.startingticks = 600
-			self.goal = 0,0
+			self.goal = (0,0)
 			self.state = "wander"
 
 	def render(self, debug=False):
@@ -56,12 +56,12 @@ class Cell():
 				penup()
 				goto(self.goal[0], self.goal[1])
 				pendown()
-				dot(5)
+				dot(4)
 	
 			
 
 	def action(self):
-		if self.startingticks == 0:
+		if self.startingticks <= 0:
 			global world
 			"""
 			-> sense nearby food within the vision range
@@ -78,24 +78,22 @@ class Cell():
 			# when the cell.current_fat reaches cell.fat_enough then 
 			# the cell will reproduce
 			
-			if self.current_fat < self.fat_enough and self.state == "wander" or self.state == "hunting":
+			#if self.current_fat < self.fat_enough and self.state == "hunting":
 				#print("seeking food")
-				self.seekFood(world.food)
+			self.seekFood(world.food)
 				#print("finding food")
-			elif self.current_fat >= self.fat_enough:
+			if self.current_fat >= self.fat_enough:
 				self.mitosis()
 				print("cloning")
 				self.state = "cloning"
 			elif self.state == "wander":
 
 				#if we have goal and reached the goal
-				if self.goal != None and getDistance((self.x,self.y), self.goal) <= 1:
-					self.goal = (random.randint(-200,200), random.randint(-200,200))
-				elif self.goal == None:
+				if getDistance((self.x,self.y), self.goal) <= 1:
 					self.goal = (random.randint(-200,200), random.randint(-200,200))
 				
 				self.move()
-			#how will the cell decide what t
+			#how will the cell decide what to do
 		else:
 			self.startingticks -= 1
 
@@ -109,7 +107,10 @@ class Cell():
 			if distance <= self.range:
 				self.visible_food.append((food, distance))
 		if self.visible_food == []:
+			self.state = "wander"
 			return
+		else: self.state = "hunting"
+
 
 		closest = None
 		close_dst = 9999999
@@ -119,7 +120,6 @@ class Cell():
 				close_dst = food[1]
 				self.goal = (closest.x, closest.y)
 				
-		self.state = "hunting"
 		self.move()
 		
 		if close_dst <= 1:
@@ -142,10 +142,10 @@ class Cell():
 	
 			dist = math.sqrt(x * x + y * y)
 
-			#calculate how much the cell should
+			# calculate how much the cell should
 			# walk in y & x direction to maintain
 			# angle to the closest food.
-			#print("dist:",dist)
+			# print("dist:",dist)
 			if dist > 1:
 				stepx = x / (dist * 10)
 				stepy = y / (dist * 10)
@@ -161,7 +161,7 @@ class Cell():
 
 	def mitosis(self):
 		if random.randint(1, config.MUTATION_RATE) == 1:
-			print("Code 0: Mutation successful.")
+			print("yay")
 
 		
 		for i in range(random.randint(1,5)):
