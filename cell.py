@@ -26,7 +26,7 @@ class Cell():
 			self.y = parentpos[1]
 			self.visible_food = []
 			self.fat_enough = self.health/self.efficiency
-			self.current_fat = 100
+			self.current_fat = 0
 			self.startingticks = 600
 			self.goal = (0,0)
 			self.state = "wander"
@@ -49,7 +49,7 @@ class Cell():
 			penup()
 			goto(self.x, self.y + 5)
 			pendown()
-			write(f"fat: {self.current_fat} / {self.fat_enough} ")
+			write(f"fat: {self.current_fat} / {self.fat_enough}  state:{self.state}")
 
 			if self.goal != None:
 				pencolor("red")
@@ -89,11 +89,10 @@ class Cell():
 			elif self.state == "wander":
 
 				#if we have goal and reached the goal
-				if getDistance((self.x,self.y), self.goal) <= 1:
+				if getDistance((self.x,self.y), self.goal) <= self.speed:
 					self.goal = (random.randint(-200,200), random.randint(-200,200))
 				
 				self.move()
-			#how will the cell decide what to do
 		else:
 			self.startingticks -= 1
 
@@ -109,7 +108,8 @@ class Cell():
 		if self.visible_food == []:
 			self.state = "wander"
 			return
-		else: self.state = "hunting"
+		else: 
+			self.state = "hunting"
 
 
 		closest = None
@@ -147,8 +147,8 @@ class Cell():
 			# angle to the closest food.
 			# print("dist:",dist)
 			if dist > 1:
-				stepx = x / (dist * 10)
-				stepy = y / (dist * 10)
+				stepx = x / (dist * 10) * self.speed
+				stepy = y / (dist * 10) * self.speed
 				#print("stepx:", stepx, "stepy:", stepy)
 			else:
 				stepx = 0
@@ -164,15 +164,22 @@ class Cell():
 			print("yay")
 
 		
-		for i in range(random.randint(1,5)):
-			world.cells.append(Cell( parentpos=(self.x,self.y), attributes=[
-			self.speed,
-			self.efficiency,  # efficiency
-			self.startinghealth, # health measured 200 (0.1 seconds) 
-			self.range, # range,
-			self.movement_intelligence, # movement intelligence ( direction measured in angle),
-			self.carlson + 1 # carlson
-			] ))
+		for i in range(random.randint(1,3)):
+			newcell =Cell( parentpos=(self.x,self.y), attributes=[
+				self.speed,
+				self.efficiency,  # efficiency
+				self.startinghealth, # health measured 200 (0.1 seconds) 
+				self.range, # range,
+				self.movement_intelligence, # movement intelligence ( direction measured in angle),
+				self.carlson + 1 # carlson
+				] )
+			print(f"""created: {newcell} \n
+			with starting health:{newcell.startinghealth}\n
+			with current fat:{newcell.current_fat}\n
+			with fat enough: {newcell.fat_enough}\n
+			""")
+			world.cells.append(newcell)
+			
 		self.current_fat = 0
 
 
