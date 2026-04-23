@@ -18,9 +18,9 @@ hideturtle()
 
 #spawn 1 cell object.
 world.cells.append(Cell( parentpos=(0,0), attributes=[
-	11,  # speed		
+	3,  # speed		
 	1,  # efficiency
-	100, # health measured 200 (0.1 seconds) 
+	100, # health measured 200 (0.1 seconds)
 	50, # range,
 	0, # movement intelligence ( direction measured in angle),
 	0 # carlson
@@ -55,7 +55,7 @@ while True:
 
 	for i in range(len(world.cells)):
 		try:
-			world.cells[i].health-=0.02
+			world.cells[i].health -= 0.02
 			if world.cells[i].health <= 0:
 				deletions.append(world.cells[i])
 		except IndexError:

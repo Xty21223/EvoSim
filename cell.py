@@ -30,9 +30,10 @@ class Cell():
 			self.startingticks = 600
 			self.goal = (0,0)
 			self.state = "wander"
+			self.color = "black"
 
 	def render(self, debug=False):
-		pencolor("black")
+		pencolor(self.color)
 		penup()
 		goto(self.x, self.y)
 		pendown()
@@ -62,6 +63,7 @@ class Cell():
 
 	def action(self):
 		if self.startingticks <= 0:
+			self.color = "black"
 			global world
 			"""
 			-> sense nearby food within the vision range
@@ -83,8 +85,8 @@ class Cell():
 			self.seekFood(world.food)
 				#print("finding food")
 			if self.current_fat >= self.fat_enough:
+				#print(f"{self} is cloning---")
 				self.mitosis()
-				print("cloning")
 				self.state = "cloning"
 			elif self.state == "wander":
 
@@ -94,6 +96,7 @@ class Cell():
 				
 				self.move()
 		else:
+			self.color = "green"
 			self.startingticks -= 1
 
 	def seekFood(self, food_list):
@@ -165,19 +168,24 @@ class Cell():
 
 		
 		for i in range(random.randint(1,3)):
+			neweff = self.efficiency + random.randint(-1,1)  # efficiency
+			if neweff == 0:
+				neweff = 1
 			newcell =Cell( parentpos=(self.x,self.y), attributes=[
-				self.speed,
-				self.efficiency,  # efficiency
-				self.startinghealth, # health measured 200 (0.1 seconds) 
-				self.range, # range,
+				self.speed + random.randint(-2,1),
+				neweff,
+				self.startinghealth + random.randint(-20,20), # health measured 200 (0.1 seconds) 
+				self.range + random.randint(-10,10), # range,
 				self.movement_intelligence, # movement intelligence ( direction measured in angle),
 				self.carlson + 1 # carlson
 				] )
-			print(f"""created: {newcell} \n
-			with starting health:{newcell.startinghealth}\n
-			with current fat:{newcell.current_fat}\n
-			with fat enough: {newcell.fat_enough}\n
-			""")
+
+			
+			# print(f"""created: {newcell} \n
+			# with starting health:{newcell.startinghealth}\n
+			# with current fat:{newcell.current_fat}\n
+			# with fat enough: {newcell.fat_enough}\n
+			# """)
 			world.cells.append(newcell)
 			
 		self.current_fat = 0
