@@ -7,6 +7,8 @@ from world_setup import world
 
 import config
 
+# AST
+
 screen = Screen()
 screen.setup(world.width, world.height)
 screen.tracer(0)
