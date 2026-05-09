@@ -1,15 +1,16 @@
-from turtle import *
 import random
+from random import randint
 import math
 from food import Food
 from world_setup import world
 import config
 import time
+import pygame
 
 #single cell organism
 class Cell():
 
-	def __init__(self, parentpos, attributes, parent=False):
+	def __init__(self, parentpos, attributes, screen, parent=False):
 		if not parent:
 			self.carlson = attributes[5]  # tree level
 			self.speed = attributes[0]
@@ -27,38 +28,14 @@ class Cell():
 			self.visible_food = []
 			self.fat_enough = self.health/self.efficiency
 			self.current_fat = 0
-			self.startingticks = 600
+			self.startingticks = 100
 			self.goal = (0,0)
 			self.state = "wander"
 			self.color = "black"
-
+			self.size = 15
+		self.renderer = screen
 	def render(self, debug=False):
-		pencolor(self.color)
-		penup()
-		goto(self.x, self.y)
-		pendown()
-		dot(20)
-
-		#vision
-		if debug:
-			pencolor("red")
-			penup()
-			goto(self.x, self.y - self.range)
-			pendown()
-			circle(self.range)
-
-			penup()
-			goto(self.x, self.y + 5)
-			pendown()
-			write(f"fat: {self.current_fat} / {self.fat_enough}  state:{self.state}")
-
-			if self.goal != None:
-				pencolor("red")
-				penup()
-				goto(self.goal[0], self.goal[1])
-				pendown()
-				dot(4)
-	
+		pygame.draw.circle(self.renderer, "red",(self.x, self.y), self.size)
 			
 
 	def action(self):
@@ -128,8 +105,10 @@ class Cell():
 		if close_dst <= 1:
 			world.food.remove(closest)
 			self.current_fat += closest.size * 5
-			world.food.append( Food( ( random.randint(-200,200), random.randint(-200,200) ) )  )
-
+			world.food.append( Food( 
+				position = ( config.WIDTH//2+randint(-200, 200) , config.HEIGHT//2+randint(-200,200) ),
+				screen = self.renderer)
+			)
 
 	def move(self):
 		"""
@@ -178,7 +157,7 @@ class Cell():
 				self.range + random.randint(-10,10), # range,
 				self.movement_intelligence, # movement intelligence ( direction measured in angle),
 				self.carlson + 1 # carlson
-				] )
+				], screen=self.renderer)
 
 			
 			# print(f"""created: {newcell} \n
