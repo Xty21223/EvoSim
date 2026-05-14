@@ -7,4 +7,4 @@ venv/
 
 .pygame-preview-runtime
 
-pygame-preview.json
+.pygame-preview.json
