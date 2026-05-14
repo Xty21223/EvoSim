@@ -1,0 +1,29 @@
+name: Build Executable for Windows
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: windows-latest  # Build for Windows
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build EXE
+        uses: sayyid5416/pyinstaller-action@v1.20
+        with:
+          python_ver: '3.10'
+          spec: 'main.py'
+          options: '--onefile, --windowed'
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-executable
+          path: dist/
+
+      - name: Deploy to Main Branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: main         
+          folder: dist/
+          target-folder: releases
