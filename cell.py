@@ -11,32 +11,51 @@ import pygame
 class Cell():
 
 	def __init__(self, parentpos, attributes, screen, parent=False):
-		if not parent:
+		if True:
 			self.carlson = attributes[5]  # tree level
 			self.speed = attributes[0]
 			self.efficiency = attributes[1]
-			self.health = attributes[2]
-			self.startinghealth = attributes[2]
+			if not parent:	
+				self.health = attributes[2]
+				self.startinghealth = attributes[2]
+			else:
+				self.health = attributes[2]+200
+				self.startinghealth = attributes[2]+200
 			self.range = attributes[3]
 			self.movement_intelligence = attributes[4]
-			self.UID = int(
-			    str(self.carlson) + str(self.speed) + str(self.efficiency) +
-			    str(self.startinghealth) + str(self.range) +
-			    str(self.movement_intelligence))
+			try:
+				self.UID = (
+					str(self.carlson) + str(self.speed) + str(self.efficiency) +
+					str(self.startinghealth) + str(self.range) +
+					str(self.movement_intelligence))
+			except ValueError as value_err:
+				print(f"Error:", value_err)
+				print(f" UID: {str(self.carlson) + str(self.speed) + str(self.efficiency) +
+					str(self.startinghealth) + str(self.range) +
+					str(self.movement_intelligence)}")
 			self.x = parentpos[0]
 			self.y = parentpos[1]
 			self.visible_food = []
-			self.fat_enough = self.health/self.efficiency
+			if not parent:
+				self.fat_enough = self.health/self.efficiency
+			else: self.fat_enough = 25
 			self.current_fat = 0
 			self.startingticks = 100
-			self.goal = (0,0)
+			self.goal = None
 			self.state = "wander"
 			self.color = "black"
-			self.size = 15
+			self.size = 10
+			self.consume_sound = pygame.mixer.Sound('beep.wav')
 		self.renderer = screen
+
 	def render(self, debug=False):
 		pygame.draw.circle(self.renderer, "red",(self.x, self.y), self.size)
+		
+		if debug:
+			pygame.draw.circle(self.renderer, "blue", (self.x,self.y),self.range, width =1 ) # width=1 means hollow circle
 			
+			if self.goal:
+				pygame.draw.circle(self.renderer, "green",(self.goal[0], self.goal[1]), 2)
 
 	def action(self):
 		if self.startingticks <= 0:
@@ -66,10 +85,13 @@ class Cell():
 				self.mitosis()
 				self.state = "cloning"
 			elif self.state == "wander":
+				if self.goal == None:
+					self.goal = (config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-700,400))
+
 
 				#if we have goal and reached the goal
 				if getDistance((self.x,self.y), self.goal) <= self.speed:
-					self.goal = (random.randint(-200,200), random.randint(-200,200))
+					self.goal = (config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-700,400))
 				
 				self.move()
 		else:
@@ -104,9 +126,10 @@ class Cell():
 		
 		if close_dst <= 1:
 			world.food.remove(closest)
+			#self.consume_sound.play()
 			self.current_fat += closest.size * 5
 			world.food.append( Food( 
-				position = ( config.WIDTH//2+randint(-200, 200) , config.HEIGHT//2+randint(-200,200) ),
+				position = ( config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-700,400) ),
 				screen = self.renderer)
 			)
 

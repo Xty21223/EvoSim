@@ -6,7 +6,7 @@ class Food:
 		def __init__(self,position,screen):
 				self.x = position[0]
 				self.y = position[1]
-				self.size = 5 #the size also affects the enough of energy gained 
+				self.size = 3 #the size also affects the enough of energy gained 
 				self.renderer = screen
 
 		def __repr__(self):
