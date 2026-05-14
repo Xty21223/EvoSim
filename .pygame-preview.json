@@ -78,7 +78,7 @@
   "lowLatencyMode": false,
   "inputDeterministic": false,
   "inputDeterministicStepMs": 16,
-  "qualityPreset": "balanced",
+  "qualityPreset": "quality",
   "startupGuardMaxRestarts": 3,
   "startupGuardWindowMs": 8000,
   "reloadBurstMax": 6,
@@ -86,6 +86,6 @@
   "reloadMinimumIntervalMs": 250,
   "dependencyPromptCooldownMs": 180000,
   "dependencyPromptMuteAfterInstallMs": 45000,
-  "surfaceMode": "panel",
+  "surfaceMode": "mirror",
   "reloadMode": "restart"
 }

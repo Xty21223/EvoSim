@@ -6,3 +6,5 @@ env/
 venv/
 
 .pygame-preview-runtime
+
+pygame-preview.json

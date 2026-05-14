@@ -11,38 +11,41 @@ import config
 pygame.init()
 screen = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
 clock = pygame.time.Clock()
+pygame.display.set_caption('EvoSim')
+
 
 
 #spawn 1 cell object.
-world.cells.append( Cell( parentpos=(config.WIDTH//2,config.HEIGHT//2), attributes=[
-	11,  # speed		
-	1,  # efficiency
+for i in range(1):
+	world.cells.append( Cell( parentpos=(config.WIDTH//2,config.HEIGHT//2), attributes=[
+	15,  # speed		
+	3,  # efficiency
 	100, # health measured 200 (0.1 seconds)
 	50, # range,
 	0, # movement intelligence ( direction measured in angle),
 	0 # carlson
 	], 
-	screen=screen)
+	screen=screen, parent=True)
 	)
 
 
 #store food objects
-for i in range(10):
+for i in range(config.FOOD_AMOUNT):
 	world.food.append( Food( 
-		position = ( config.WIDTH//2+randint(-200, 200) , config.HEIGHT//2+randint(-200,200) ),
+		position = ( config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-700,400) ),
 		screen = screen )
 	)
 
 running = True
 while running:
-	clock.tick(60)
+	clock.tick(120)
 	# for detecting keypress event 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
 
 	# clear the frame
-	screen.fill("white")
+	screen.fill((10, 10, 10))
 
 
 	#render everything
@@ -60,7 +63,7 @@ while running:
 
 	for i in range(len(world.cells)):
 		try:
-			world.cells[i].health -= 0.02
+			world.cells[i].health -= 0.25
 			if world.cells[i].health <= 0:
 				deletions.append(world.cells[i])
 		except IndexError:
@@ -70,6 +73,18 @@ while running:
 		world.cells.remove(object)
 
 
+	#checkf for reset	
+	if len(world.cells) == 0:
+		world.cells.append( Cell( parentpos=(config.WIDTH//2,config.HEIGHT//2), attributes=[
+	16,  # speed		
+	5,  # efficiency
+	150, # health measured 200 (0.1 seconds)
+	50, # range,
+	0, # movement intelligence ( direction measured in angle),
+	0 # carlson
+	], 
+	screen=screen, parent=True)
+	)
 	pygame.display.flip()
 
 pygame.quit()
