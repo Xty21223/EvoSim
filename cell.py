@@ -37,7 +37,7 @@ class Cell():
 			self.y = parentpos[1]
 			self.visible_food = []
 			if not parent:
-				self.fat_enough = self.health/self.efficiency
+				self.fat_enough = (self.health/self.efficiency)//1.5
 			else: self.fat_enough = 25
 			self.current_fat = 0
 			self.startingticks = 100

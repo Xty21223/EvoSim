@@ -65,7 +65,7 @@ while running:
 	for i in range(len(world.cells)):
 		try:
 			world.cells[i].health -= 0.25
-			if world.cells[i].health <= 0:
+			if world.cells[i].health <= 0 or len(world.cells)-len(deletions) >= 200:
 				deletions.append(world.cells[i])
 		except IndexError:
 			print("Surpassed index!")
@@ -90,11 +90,13 @@ while running:
 		screen=screen, parent=True))
 
 	font = pygame.font.SysFont(config.FONT_PREFERENCES, 20)
-	indicator_text = font.render(f"Cells: {len(world.cells)}", True, (255, 255, 255))
+	if len(world.cells) >= 190: cellsamountindicatortext = "red"
+	else: cellsamountindicatortext = "white"
+	indicator_text = font.render(f"Cells: {len(world.cells)}/200", True, cellsamountindicatortext)
 	text_rect = indicator_text.get_rect()
 	text_rect.topright = (config.WIDTH - 10, 10)
 
-	title_text = font.render(f"Evosim: {config.VERSION_NAME}, {config.VERSION}", True, "cyan")
+	title_text = font.render(f"Evosim: {config.VERSION_NAME}, {config.VERSION}{config.DARKLET}", True, "cyan")
 	title_text_rect = title_text.get_rect()
 	title_text_rect.topleft = (10, 10)
 
