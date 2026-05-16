@@ -5,6 +5,6 @@ __pycache__/
 env/
 venv/
 
-.pygame-preview-runtime
+.pygame-preview-runtime/
 
 .pygame-preview.json
