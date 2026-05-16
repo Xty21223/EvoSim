@@ -65,7 +65,7 @@ while running:
 	for i in range(len(world.cells)):
 		try:
 			world.cells[i].health -= 0.25
-			if world.cells[i].health <= 0 or len(world.cells)-len(deletions) >= 200:
+			if world.cells[i].health <= 0 or len(world.cells)-len(deletions) > 200:
 				deletions.append(world.cells[i])
 		except IndexError:
 			print("Surpassed index!")
