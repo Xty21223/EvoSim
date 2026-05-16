@@ -12,7 +12,8 @@ pygame.init()
 screen = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
 clock = pygame.time.Clock()
 pygame.display.set_caption('EvoSim')
-
+mutations = 0
+deaths = 0
 
 
 #spawn 1 cell object.
@@ -32,7 +33,7 @@ for i in range(1):
 #store food objects
 for i in range(config.FOOD_AMOUNT):
 	world.food.append( Food( 
-		position = ( config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-700,400) ),
+		position = ( config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-400,400) ),
 		screen = screen )
 	)
 
@@ -51,14 +52,14 @@ while running:
 	#render everything
 	for obj in world.food:
 		obj.render(debug = config.DEBUG_ENABLED)
-
 	for cell in world.cells:
 		cell.render(debug = config.DEBUG_ENABLED)
 
 	#move cell
 	for cell in world.cells:
-		cell.action()
-
+		a3 = cell.action()
+		if a3 == 1:
+			mutations += 1
 	deletions = []
 
 	for i in range(len(world.cells)):
@@ -70,24 +71,46 @@ while running:
 			print("Surpassed index!")
 		
 	for object in deletions:
+		deaths += 1
 		world.cells.remove(object)
 
 
 	#checkf for reset	
 	if len(world.cells) == 0:
+		mutations = 0
+		deaths = 0
 		world.cells.append( Cell( parentpos=(config.WIDTH//2,config.HEIGHT//2), attributes=[
-	16,  # speed		
-	5,  # efficiency
-	150, # health measured 200 (0.1 seconds)
-	50, # range,
-	0, # movement intelligence ( direction measured in angle),
-	0 # carlson
-	], 
-	screen=screen, parent=True)
-	)
+		16,  # speed		
+		5,  # efficiency
+		150, # health measured 200 (0.1 seconds)
+		50, # range,
+		0, # movement intelligence ( direction measured in angle),
+		0 # carlson
+		], 
+		screen=screen, parent=True))
+
+	font = pygame.font.SysFont(config.FONT_PREFERENCES, 20)
+	indicator_text = font.render(f"Cells: {len(world.cells)}", True, (255, 255, 255))
+	text_rect = indicator_text.get_rect()
+	text_rect.topright = (config.WIDTH - 10, 10)
+
+	title_text = font.render(f"Evosim: {config.VERSION_NAME}, {config.VERSION}", True, "cyan")
+	title_text_rect = title_text.get_rect()
+	title_text_rect.topleft = (10, 10)
+
+	indicator1_text = font.render(f"Births: {mutations}  |  Deaths: {deaths}", True, "green")
+	indicator1_text_rect = indicator1_text.get_rect()
+	indicator1_text_rect.bottomleft = (10, config.HEIGHT - 10)
+
+	# 6. Draw the text onto the screen
+	screen.blit(indicator_text, text_rect)
+	screen.blit(title_text, title_text_rect)
+	screen.blit(indicator1_text, indicator1_text_rect)
+
+	frame=pygame.Rect(0, 0, 1400, 800)
+	frame.center = (config.WIDTH//2,config.HEIGHT//2)
+	pygame.draw.rect(screen, "white", frame, 2)
+
 	pygame.display.flip()
 
 pygame.quit()
-
-#Create another list to store all cells that needs to be remove
-#iterate through the deletion list and remove each dead cell in a seperate forloop at the end of each "frame"

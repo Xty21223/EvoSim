@@ -44,12 +44,12 @@ class Cell():
 			self.goal = None
 			self.state = "wander"
 			self.color = "black"
-			self.size = 10
+			self.size = 8
 			self.consume_sound = pygame.mixer.Sound('beep.wav')
 		self.renderer = screen
 
 	def render(self, debug=False):
-		pygame.draw.circle(self.renderer, "red",(self.x, self.y), self.size)
+		pygame.draw.circle(self.renderer, "white",(self.x, self.y), self.size)
 		
 		if debug:
 			pygame.draw.circle(self.renderer, "blue", (self.x,self.y),self.range, width =1 ) # width=1 means hollow circle
@@ -84,14 +84,15 @@ class Cell():
 				#print(f"{self} is cloning---")
 				self.mitosis()
 				self.state = "cloning"
+				return 1
 			elif self.state == "wander":
 				if self.goal == None:
-					self.goal = (config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-700,400))
+					self.goal = (config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-400,400))
 
 
 				#if we have goal and reached the goal
 				if getDistance((self.x,self.y), self.goal) <= self.speed:
-					self.goal = (config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-700,400))
+					self.goal = (config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-400,400))
 				
 				self.move()
 		else:
@@ -129,7 +130,7 @@ class Cell():
 			#self.consume_sound.play()
 			self.current_fat += closest.size * 5
 			world.food.append( Food( 
-				position = ( config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-700,400) ),
+				position = ( config.WIDTH//2+randint(-700, 400) , config.HEIGHT//2+randint(-400,400) ),
 				screen = self.renderer)
 			)
 
