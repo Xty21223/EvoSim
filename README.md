@@ -1,5 +1,5 @@
 # EvoSim
-### EvoSim is an open-source python turtle based cell simulator.
+### EvoSim is an open-source pygame-based cell simulator.
 
 ### Features:
 - Evolution by natrual selection
