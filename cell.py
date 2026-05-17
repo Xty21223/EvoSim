@@ -10,7 +10,7 @@ import pygame
 #single cell organism
 class Cell():
 
-	def __init__(self, parentpos, attributes, screen, parent=False):
+	def __init__(self, parentpos, attributes, screen, world, parent=False):
 		if True:
 			self.carlson = attributes[5]  # tree level
 			self.speed = attributes[0]
@@ -46,6 +46,7 @@ class Cell():
 			self.color = "black"
 			self.size = 8
 			self.consume_sound = pygame.mixer.Sound('beep.wav')
+			self.world = world
 		self.renderer = screen
 
 	def render(self, debug=False):
@@ -171,6 +172,7 @@ class Cell():
 
 		
 		for i in range(random.randint(1,3)):
+			self.world.mutations += 1
 			neweff = self.efficiency + random.randint(-1,1)  # efficiency
 			if neweff == 0:
 				neweff = 1
@@ -181,7 +183,7 @@ class Cell():
 				self.range + random.randint(-10,10), # range,
 				self.movement_intelligence, # movement intelligence ( direction measured in angle),
 				self.carlson + 1 # carlson
-				], screen=self.renderer)
+				], screen=self.renderer, world=self.world)
 
 			
 			# print(f"""created: {newcell} \n
