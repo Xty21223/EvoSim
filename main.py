@@ -77,7 +77,6 @@ while running:
 	if len(world.cells) > 200:
 		excess = len(world.cells) - 200
 		for _ in range(excess):
-			deaths += 1
 			world.cells.pop()
 
 
