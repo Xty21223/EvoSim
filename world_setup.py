@@ -5,6 +5,7 @@ class World():
 		self.height = h
 		self.food = []
 		self.cells = []
+		self.mutations = 0
 
 
 #world = World(1920,1080)

@@ -8,3 +8,10 @@ venv/
 .pygame-preview-runtime/
 
 .pygame-preview.json
+
+metrics-v5.py
+AGENTS.md
+
+.pygame-preview-runtime/
+
+.pygame-preview.json

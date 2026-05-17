@@ -1,4 +1,3 @@
-
 MUTATION_RATE = 10
 DEBUG_ENABLED = False
 if DEBUG_ENABLED: DARKLET = "  |  DEBUG ENABLED"
@@ -8,3 +7,4 @@ FOOD_AMOUNT = 60
 FONT_PREFERENCES = ["consolas", "menlo", "monaco", "couriernew"]
 VERSION_NAME = "alpha"
 VERSION = "1.0"
+CELLS_LIMIT = 200

@@ -12,7 +12,7 @@ pygame.init()
 screen = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
 clock = pygame.time.Clock()
 pygame.display.set_caption('EvoSim')
-mutations = 0
+world.mutations = 0
 deaths = 0
 
 
@@ -26,8 +26,7 @@ for i in range(1):
 	0, # movement intelligence ( direction measured in angle),
 	0 # carlson
 	], 
-	screen=screen, parent=True)
-	)
+	screen=screen, parent=True, world=world))
 
 
 #store food objects
@@ -57,15 +56,13 @@ while running:
 
 	#move cell
 	for cell in world.cells:
-		a3 = cell.action()
-		if a3 == 1:
-			mutations += 1
+		cell.action()
 	deletions = []
 
 	for i in range(len(world.cells)):
 		try:
 			world.cells[i].health -= 0.25
-			if world.cells[i].health <= 0 or len(world.cells)-len(deletions) > 200:
+			if world.cells[i].health <= 0:
 				deletions.append(world.cells[i])
 		except IndexError:
 			print("Surpassed index!")
@@ -74,10 +71,16 @@ while running:
 		deaths += 1
 		world.cells.remove(object)
 
+	if len(world.cells) > config.CELLS_LIMIT:
+		excess = len(world.cells) - config.CELLS_LIMIT
+		for _ in range(excess):
+			world.mutations -= 1
+			world.cells.pop()
+
 
 	#checkf for reset	
 	if len(world.cells) == 0:
-		mutations = 0
+		world.mutations = 0
 		deaths = 0
 		world.cells.append( Cell( parentpos=(config.WIDTH//2,config.HEIGHT//2), attributes=[
 		16,  # speed		
@@ -87,12 +90,12 @@ while running:
 		0, # movement intelligence ( direction measured in angle),
 		0 # carlson
 		], 
-		screen=screen, parent=True))
+		screen=screen, parent=True, world=world))
 
 	font = pygame.font.SysFont(config.FONT_PREFERENCES, 20)
 	if len(world.cells) >= 190: cellsamountindicatortext = "red"
 	else: cellsamountindicatortext = "white"
-	indicator_text = font.render(f"Cells: {len(world.cells)}/200", True, cellsamountindicatortext)
+	indicator_text = font.render(f"Cells: {len(world.cells)}/{config.CELLS_LIMIT}", True, cellsamountindicatortext)
 	text_rect = indicator_text.get_rect()
 	text_rect.topright = (config.WIDTH - 10, 10)
 
@@ -100,7 +103,7 @@ while running:
 	title_text_rect = title_text.get_rect()
 	title_text_rect.topleft = (10, 10)
 
-	indicator1_text = font.render(f"Births: {mutations}  |  Deaths: {deaths}", True, "green")
+	indicator1_text = font.render(f"Births: {world.mutations}  |  Deaths: {deaths}", True, "green")
 	indicator1_text_rect = indicator1_text.get_rect()
 	indicator1_text_rect.bottomleft = (10, config.HEIGHT - 10)
 
