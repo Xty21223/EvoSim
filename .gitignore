@@ -10,3 +10,4 @@ venv/
 .pygame-preview.json
 
 metrics-v5.py
+AGENTS.md
