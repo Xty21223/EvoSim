@@ -56,7 +56,7 @@ while running:
 
 	#move cell
 	for cell in world.cells:
-		a3 = cell.action()
+		cell.action()
 	deletions = []
 
 	for i in range(len(world.cells)):

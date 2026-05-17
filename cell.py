@@ -47,7 +47,7 @@ class Cell():
 			self.size = 8
 			self.consume_sound = pygame.mixer.Sound('beep.wav')
 			self.world = world
-		self.renderer = screen
+	  	self.renderer = screen
 
 	def render(self, debug=False):
 		pygame.draw.circle(self.renderer, "white",(self.x, self.y), self.size)
